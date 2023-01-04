@@ -34,7 +34,7 @@
                 "data-clipservice-cut": "false",
                 "data-clipservice-isemptyplaceholder": "false",
                 "data-timestamp": new Date().toString(),
-                "data-clipboardasbytes-url": window.location.origin + "/GetClipboardBytes.zip",
+                "data-clipboardasbytes-url": (new URL("GetClipboardBytes.zip", document.location)).href,
                 "data-clipservice-param": '{"wg":[false]}',
                 "data-shapeids": "7",
             };
