@@ -1,0 +1,134 @@
+<html lang="en">
+
+<head>
+    <title>Document title</title>
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+</head>
+
+<body>
+    <div id="chart-container"></div>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #chart-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+
+    <script>
+        const copyChart = (imageBlob) => {
+            const args = {
+                "class": "CID93d4a355-2e1d-4f73-a55f-a054741250d1",
+                "data-copystatus": "32",
+                "data-copyfailedreason": "0",
+                "data-clipservice-version": "0",
+                "data-clipservice-dc": "PUS7",
+                "data-clipservice-type": "shape",
+                "data-clipservice-count": "1",
+                "data-clipservice-cut": "false",
+                "data-clipservice-isemptyplaceholder": "false",
+                "data-timestamp": new Date().toString(),
+                "data-clipboardasbytes-url": window.location.origin + "/GetClipboardBytes.zip",
+                "data-clipservice-param": '{"wg":[false]}',
+                "data-shapeids": "7",
+            };
+
+            const a = document.createElement("a");
+            a.innerHTML = "&nbsp;";
+            for (const k in args) {
+                if (!Object.prototype.hasOwnProperty.call(args, k)) {
+                    continue;
+                }
+
+                const v = args[k];
+
+                a.setAttribute(k, v);
+                console.log(k, v);
+            }
+
+            const htmlBlob = new Blob([a.outerHTML], { type: "text/html" });
+
+            const data = [
+                new ClipboardItem({
+                    [htmlBlob.type]: htmlBlob,
+                    [imageBlob.type]: imageBlob
+                })
+            ];
+
+            window.navigator.clipboard.write(data).then(() => {
+                console.log("Success!");
+            }, (err) => {
+                console.error(err);
+            })
+        };
+
+        (() => {
+            const dom = document.getElementById('chart-container');
+            const myChart = echarts.init(dom, null, {
+                renderer: 'canvas',
+                useDirtyRect: false
+            });
+            const app = {};
+
+            const option = {
+                legend: {
+                    top: 'bottom'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        myCopy: {
+                            show: true,
+                            title: 'Copy',
+                            icon: 'path://M432.45,595.444c0,2.177-4.661,6.82-11.305,6.82c-6.475,0-11.306-4.567-11.306-6.82s4.852-6.812,11.306-6.812C427.841,588.632,432.452,593.191,432.45,595.444L432.45,595.444z M421.155,589.876c-3.009,0-5.448,2.495-5.448,5.572s2.439,5.572,5.448,5.572c3.01,0,5.449-2.495,5.449-5.572C426.604,592.371,424.165,589.876,421.155,589.876L421.155,589.876z M421.146,591.891c-1.916,0-3.47,1.589-3.47,3.549c0,1.959,1.554,3.548,3.47,3.548s3.469-1.589,3.469-3.548C424.614,593.479,423.062,591.891,421.146,591.891L421.146,591.891zM421.146,591.891',
+                            onclick: () => {
+                                const imageStr = myChart.getDataURL({
+                                    backgroundColor: "white",
+                                    excludeComponents: ["toolbox"]
+                                });
+
+                                fetch(imageStr)
+                                    .then(res => res.blob())
+                                    .then(imageBlob => copyChart(imageBlob));
+                            }
+                        }
+                    }
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: [50, 250],
+                        center: ['50%', '50%'],
+                        itemStyle: {
+                            borderRadius: 8
+                        },
+                        data: [
+                            { value: 69765, name: 'United States' },
+                            { value: 38253, name: 'Canada' },
+                            { value: 17237, name: 'Brazil' },
+                            { value: 11506, name: 'Japan' },
+                            { value: 10632, name: 'Austria' },
+                            { value: 10416, name: 'United Kingdom' },
+                            { value: 8312, name: 'China' },
+                            { value: 7318, name: 'France' },
+                            { value: 6873, name: 'Australia' },
+                            { value: 5512, name: 'Germany' }
+                        ]
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+
+            window.addEventListener('resize', myChart.resize);
+        })();
+    </script>
+</body>
+
+</html>
